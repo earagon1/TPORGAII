@@ -12,7 +12,6 @@ int CalcularOperacion(int Operando1, char Operador, int Operando2) {
 }
 
 int main() {
-    char pregunta[100];
     int a, b;
     char op;
 
