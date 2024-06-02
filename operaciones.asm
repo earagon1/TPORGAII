@@ -9,17 +9,18 @@ recibir_Operacion:
 
     ; Recibir parámetros
     mov ebx, edi         ; Operando1 en ebx
-    mov eax, esi         ; Operador en al
+    mov al, sil          ; Operador en al (sil es el byte menos significativo de esi)
     mov ecx, edx         ; Operando2 en ecx
 
     ; Comparar el operador y saltar a la operación correspondiente
-    cmp al, '+'
+    ; Se puede usar los numeros de la tabla ascii o el caracter  
+    cmp al, 43           ; Comparar con el valor ASCII de '+'
     je sum
-    cmp al, '-'
+    cmp al, 45           ; Comparar con el valor ASCII de '-'
     je res
-    cmp al, '*'
+    cmp al, 42           ; Comparar con el valor ASCII de '*'
     je mul
-    cmp al, '/'
+    cmp al, 47           ; Comparar con el valor ASCII de '/'
     je div
 
     ; Si no es un operador válido, devolver 0 y salir
@@ -42,13 +43,13 @@ mul:
     jmp fin
 
 div:
-    ; Evitar división por cero
+    ;Falta arreglar lo de la division por 0
     cmp ecx, 0
     je error
-    mov eax, ebx         ; Mover Operando1 a eax (divisor)
+    mov eax, ebx         ; Mover Operando1 a eax (dividendo)
     xor edx, edx         ; Limpiar edx para la división
     div ecx              ; Dividir Operando1 entre Operando2
-    ; El cociente está ahora en eax, el resto en edx
+    ; El cociente está ahora en eax, el residuo en edx
     jmp fin
 
 error:

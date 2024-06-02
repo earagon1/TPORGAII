@@ -27,7 +27,7 @@ int main() {
             break;
         }
 
-        // Separar la pregunta en operandos y operador
+        // Separar la pregunta en operandos y operador usando strtok
         char* token = strtok(pregunta, " ");
         if (token == NULL) {
             printf("Lo siento, mis respuestas son limitadas.\n");
@@ -56,4 +56,3 @@ int main() {
 
     return 0;
 }
-
