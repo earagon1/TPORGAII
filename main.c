@@ -5,11 +5,7 @@
 // Declaraciones de las funciones en ensamblador
 extern int recibir_Operacion(int Operando1, char Operador, int Operando2);
 
-void LeerPregunta(char* pregunta) {
-    printf("Ingrese una operación aritmética (ej. 10 + 10) o 'exit' para salir: ");
-    fgets(pregunta, 100, stdin);
-    pregunta[strcspn(pregunta, "\n")] = 0; // Remover el salto de línea
-}
+void LeerPregunta(int *a, char *op, int *b);
 
 int CalcularOperacion(int Operando1, char Operador, int Operando2) {
     return recibir_Operacion(Operando1, Operador, Operando2);
@@ -17,42 +13,40 @@ int CalcularOperacion(int Operando1, char Operador, int Operando2) {
 
 int main() {
     char pregunta[100];
+    int a, b;
+    char op;
 
     while (1) {
-        LeerPregunta(pregunta);
+        LeerPregunta(&a, &op, &b);
 
-        // Si el usuario ingresa "exit", salir del bucle
-        if (strcmp(pregunta, "exit") == 0) {
-            printf("Saliendo del programa.\n");
+        //chequear si el usuario quiere salir
+        if(op == 'q'){
             break;
         }
-
-        // Separar la pregunta en operandos y operador usando strtok
-        char* token = strtok(pregunta, " ");
-        if (token == NULL) {
-            printf("Lo siento, mis respuestas son limitadas.\n");
+        if(op == '/' && b == 0){
+            printf("Error: no se permite dividir por 0. \n");
             continue;
         }
-        int Operando1 = atoi(token);
-
-        token = strtok(NULL, " ");
-        if (token == NULL || strlen(token) != 1) {
-            printf("Lo siento, mis respuestas son limitadas.\n");
-            continue;
-        }
-        char Operador = token[0];
-
-        token = strtok(NULL, " ");
-        if (token == NULL) {
-            printf("Lo siento, mis respuestas son limitadas.\n");
-            continue;
-        }
-        int Operando2 = atoi(token);
-
-        // Calcular la operación
-        int resultado = CalcularOperacion(Operando1, Operador, Operando2);
-        printf("El resultado es: %d\n", resultado);
+        int result = CalcularOperacion(a, op, b);
+        printf("%d %c %d = %d\n", a, op, b, result);
+ 
     }
 
     return 0;
+}
+
+void LeerPregunta(int *a, char *op, int *b) {
+    char buffer [50];
+    printf("Ingrese una operación aritmética (ej. 10 + 10) o 'q' para salir: ");
+    fgets(buffer, sizeof(buffer), stdin);
+
+    if (strcmp(buffer, "q\n") == 0){
+        *op = 'q';
+        return;
+    }
+    //parse the input
+    if(sscanf(buffer, "%d %c %d", a, op, b) != 3){
+        printf("Formato invalido. Por favor intente nuevamente. \n");
+        LeerPregunta(a, op, b);
+    }
 }
