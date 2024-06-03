@@ -2,3 +2,4 @@ bot_aritmetico
 *.o
 program
 .vscode/
+.idea
