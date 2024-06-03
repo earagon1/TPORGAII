@@ -26,6 +26,14 @@ int main() {
             printf("Error: no se permite dividir por 0. \n");
             continue;
         }
+        if(op == 'f'){
+            printf("Formato invalido. Por favor intente nuevamente. \n");
+            continue;
+        }
+        if(op != '+' && op != '-' && op != '*' && op != '/'){
+            printf("Operacion invalida. Por favor utilice una de las siguientes: + - * / \n");
+            continue;
+        }
         int result = CalcularOperacion(a, op, b);
         printf("%d %c %d = %d\n", a, op, b, result);
  
@@ -45,7 +53,7 @@ void LeerPregunta(int *a, char *op, int *b) {
     }
     //parse the input
     if(sscanf(buffer, "%d %c %d", a, op, b) != 3){
-        printf("Formato invalido. Por favor intente nuevamente. \n");
-        LeerPregunta(a, op, b);
+        *op = 'f';
+        return;
     }
 }
