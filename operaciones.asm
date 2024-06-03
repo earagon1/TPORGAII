@@ -43,7 +43,6 @@ mul:
     jmp fin
 
 div:
-    ;Falta arreglar lo de la division por 0
     cmp ecx, 0
     je error
     mov eax, ebx         ; Mover Operando1 a eax (dividendo)
