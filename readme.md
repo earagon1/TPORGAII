@@ -5,8 +5,8 @@
 * Franco Disabato - francodisabatobook@gmail.com
 
 ## Profesores
-* Carloz Jimenez
-* Alessia Katerina Lescano Horbik 
+* Carloz Jimenez - cnjimenez@campus.ungs.edu.ar
+* Alessia Katerina Lescano Horbik - alessiaklescano@gmail.com
 
 ## Codigo
 
