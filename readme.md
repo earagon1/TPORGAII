@@ -10,6 +10,8 @@
 
 ## Codigo
 
+Se encuentra subido en el repositorio: https://github.com/earagon1/TPORGAII
+
 El codigo se divide en 2 partes.
 * Codigo en main.c --> interaccion con el usuario.
 * Codigo en operaciones.asm --> calculo de operaciones matematicas.
