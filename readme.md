@@ -41,8 +41,8 @@ int CalcularOperacion(int Operando1, char Operador, int Operando2) {
 LeerPregunta() es utilizado para pedir al usuario que ingrese una operacion matematica siguiendo
 el formato ´10 + 10´ por ejemplo.
 Se valida que lo ingresado tenga el formato de `%d %c %d`, el cual significa `digito` `caracter` `digito`. 
-Si no cumple este formato, se le informa al usaurio con un mensaje de error y se vuelve a pedir que
-ingrese el input con formato correcto.
+Si no cumple este formato, se devuelve la letra 'f' como operacion para informar el formato incorrecto y
+lanzar el mensaje de error correspondiente.
 
 Tambien da la opcion de cerrar el programa ingresando la letra `q`
 
@@ -58,8 +58,8 @@ void LeerPregunta(int *a, char *op, int *b) {
     }
     //parse the input
     if(sscanf(buffer, "%d %c %d", a, op, b) != 3){
-        printf("Formato invalido. Por favor intente nuevamente. \n");
-        LeerPregunta(a, op, b);
+        *op = 'f';
+        return;
     }
 }
 ```
@@ -69,6 +69,8 @@ Luego entra en un loop en el cual le pide al usaurio ingresar datos. Con estos d
 de casos borde.
 * Si el usuario quiere salir del programa se espera la letra `q`.
 * Si el usaurio intenta dividir por cero se devuelve un mensaje de error.
+* Si el usuario ingreso un formato incorrecto devuelve un mensaje de error.
+* Si el usuario uso un operador que no sea `+ - * /` devuelve un mensaje de error.
 * Si pasa todas las validaciones se calcula la operacion en asembler y se devuelve el resultado por pantalla.
 
 ```c
@@ -87,6 +89,14 @@ int main() {
             printf("Error: no se permite dividir por 0. \n");
             continue;
         }
+        if(op == 'f'){
+            printf("Formato invalido. Por favor intente nuevamente. \n");
+            continue;
+        }
+        if(op != '+' && op != '-' && op != '*' && op != '/'){
+            printf("Operacion invalida. Por favor utilice una de las siguientes: + - * / \n");
+            continue;
+        }
         int result = CalcularOperacion(a, op, b);
         printf("%d %c %d = %d\n", a, op, b, result);
  
@@ -99,9 +109,10 @@ int main() {
 ### operaciones.asm
 
 recibir_Operacion espera recibir 3 parametros. Operando1, operador y operando2. 
-Disponemos de 4 registros de 32-bit para realizar todas las operaciones aritmeticas, que pueden usarse como
-4 registros de 32-bit `EAX, EBX, ECX, EDX` o 4 registros 16-bit `AX, BX, CX, DX` 
-o 8 registros de 8-bit `AH, AL, BH, BL, CH, CL, DH, DL`.
+Disponemos de 4 registros de 32-bit para realizar todas las operaciones aritmeticas, que pueden usarse como:
+* 4 registros de 32-bit `EAX, EBX, ECX, EDX`
+* 4 registros 16-bit `AX, BX, CX, DX` (parte inferior de los de 32-bit)
+* 8 registros de 8-bit `AH, AL, BH, BL, CH, CL, DH, DL` (parte inferior y superior de los de 16-bit)
 
 Utilizamos los registro `EAX y EBX` de 32-bit para almacenar los numeros.
 Y el registro `AL` de 8-bit para el simbolo del operando.
@@ -203,3 +214,26 @@ fin:
     pop rbp
     ret
 ```
+
+## Compilacion y ejecucion
+
+Se genero un archivo `compile.sh` que compila el codigo en c y en asm. Luego los linkea y ejecuta 
+el programa.
+Se puede ejecutar con el comando:
+`./compile.sh`
+
+```shell
+nasm -f elf64 -o operaciones.o operaciones.asm;
+gcc -c main.c -o main.o;
+gcc -o program main.o operaciones.o
+./program;
+```
+
+
+## Limitaciones
+
+* Solo se pueden calcular numeros enteros.
+
+* CalcularOperacion() solo puede devolver numeros enteros, por lo cual al hacer la division se 
+perdera el resto de la misma si lo tuviera. Por ejemplo la cuenta `1 / 2 = 0.5` ,
+pero al no ser float el resultado sera `1 / 2 = 0`.
